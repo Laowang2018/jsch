@@ -5,10 +5,14 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.Vector;
 
 public class JschTest {
@@ -25,11 +29,22 @@ public class JschTest {
         jSch.setKnownHosts("C:\\Users\\wsj60\\.ssh\\known_host");
         Session session = jSch.getSession(username, ip, Integer.valueOf(port));
         session.setConfig("StrictHostKeyChecking", "no");
-        session.connect();
+        session.connect(1000000000);
         ChannelSftp sftpChannel = (ChannelSftp)session.openChannel("sftp");
         sftpChannel.connect();
-        Vector ls = sftpChannel.ls("/home/laowang/.ssh");
-        System.out.println(ls);
+        Vector ls = sftpChannel.ls("/home/laowang/test");
+        for(int i=0; i<ls.size(); i++) {
+            Object o = ls.get(i);
+            System.out.println(o);
+        }
+//        for(int i=0; i<500000; i++) {
+//            DecimalFormat decimalFormat = new DecimalFormat("000000000000000000000");
+//            String format = decimalFormat.format(i);
+//            sftpChannel.mkdir("/home/laowang/test/"+format);
+//        }
+        System.out.println("finished");
+        sftpChannel.disconnect();
+        session.disconnect();
 
 //        ChannelSftp sftpChanel = (ChannelSftp)session.openChannel("sftp");
 //        Vector ls = sftpChanel.ls("/home/laowang");
